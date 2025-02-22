@@ -4,11 +4,18 @@
   
     <video id="videoElement" width="100%" height="auto" autoplay></video>
   
-    <po-list-view *ngIf="scannedCodes.length" [p-items]="scannedCodes" p-title="Itens Escaneados">
+    <po-list-view 
+      *ngIf="scannedCodes.length" 
+      [p-items]="scannedCodes" 
+      p-title="Itens Escaneados"
+      p-show-detail="true">
+      
+      <!-- Template para exibir os detalhes ao clicar em "Exibir Detalhes" -->
       <ng-template let-item p-list-view-detail-template>
         <p><strong>Código:</strong> {{ item.code }}</p>
-        <p><strong>Hora:</strong> {{ item.time }}</p>
+        <p><strong>Hora da Leitura:</strong> {{ item.time }}</p>
       </ng-template>
+      
     </po-list-view>
   </po-page-default>
   
