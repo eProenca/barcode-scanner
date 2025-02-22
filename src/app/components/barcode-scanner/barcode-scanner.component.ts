@@ -1,20 +1,18 @@
 import { Component } from '@angular/core';
 import { BrowserMultiFormatReader } from '@zxing/browser';
 import { CommonModule } from '@angular/common';
-
-// Importando os módulos necessários do PO UI
 import { PoPageModule, PoButtonModule, PoListViewModule } from '@po-ui/ng-components';
 
 @Component({
   selector: 'app-barcode-scanner',
-  standalone: true, // Define o componente como independente
-  imports: [CommonModule, PoPageModule, PoButtonModule, PoListViewModule], // Importa os módulos do PO UI
+  standalone: true,
+  imports: [CommonModule, PoPageModule, PoButtonModule, PoListViewModule],
   templateUrl: './barcode-scanner.component.html',
   styleUrls: ['./barcode-scanner.component.scss']
 })
 export class BarcodeScannerComponent {
   scanner: BrowserMultiFormatReader;
-  scannedCodes: string[] = [];
+  scannedCodes: { code: string, time: string }[] = [];
   isScanning: boolean = false;
   lastScanned: number = 0;
 
@@ -29,7 +27,10 @@ export class BarcodeScannerComponent {
         if (result?.getText) {
           const now = Date.now();
           if (now - this.lastScanned >= 5000) {
-            this.scannedCodes.push(result.getText());
+            this.scannedCodes.push({
+              code: result.getText(),
+              time: new Date().toLocaleTimeString() // Captura a hora/minuto/segundo
+            });
             this.lastScanned = now;
           }
         }

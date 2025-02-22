@@ -1,4 +1,4 @@
-<po-page-default  p-title="Leitor de Código de Barras">
+<po-page-default p-title="Leitor de Código de Barras">
     <po-button p-label="Ler Código de Barras" (p-click)="startScan()"></po-button>
     <po-button p-label="Parar" (p-click)="stopScan()" *ngIf="isScanning"></po-button>
   
@@ -6,7 +6,8 @@
   
     <po-list-view *ngIf="scannedCodes.length" [p-items]="scannedCodes" p-title="Itens Escaneados">
       <ng-template let-item p-list-view-detail-template>
-        {{ item }}
+        <p><strong>Código:</strong> {{ item.code }}</p>
+        <p><strong>Hora:</strong> {{ item.time }}</p>
       </ng-template>
     </po-list-view>
   </po-page-default>
