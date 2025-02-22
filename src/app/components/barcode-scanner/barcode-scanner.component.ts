@@ -78,8 +78,8 @@ export class BarcodeScannerComponent {
         const item = this.scannedQueue.shift();
         if (item) {
           this.detailedCodes.push(item);
-          await this.delay(5000);
           this.totalAdded++;
+          await this.delay(5000);
         }
       } else {
         await this.delay(500);
