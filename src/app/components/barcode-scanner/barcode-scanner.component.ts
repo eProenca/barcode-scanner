@@ -12,52 +12,77 @@ import { PoPageModule, PoButtonModule, PoListViewModule } from '@po-ui/ng-compon
 })
 export class BarcodeScannerComponent {
   scanner: BrowserMultiFormatReader;
-  scannedQueue: { code: string, time: string }[] = []; // Fila de códigos escaneados
-  detailedCodes: { code: string, time: string }[] = []; // Lista de detalhes exibidos
+  scannedQueue: { code: string, time: string }[] = [];
+  detailedCodes: { code: string, time: string }[] = [];
   isScanning: boolean = false;
   totalScanned: number = 0;
+  totalAdded: number = 0;
   isProcessing: boolean = false;
+  videoStream: MediaStream | null = null;
 
   constructor() {
     this.scanner = new BrowserMultiFormatReader();
   }
 
-  startScan() {
+  async startScan() {
     this.isScanning = true;
-    this.scanner
-      .decodeFromVideoDevice(undefined, 'videoElement', (result) => {
-        if (result?.getText) {
+
+    try {
+      const videoElement = document.getElementById('videoElement') as HTMLVideoElement;
+      this.videoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+
+      if (videoElement) {
+        videoElement.srcObject = this.videoStream;
+        videoElement.style.display = 'block';
+      }
+
+      this.scanner.decodeFromVideoDevice(undefined, 'videoElement', (result, error, controls) => {
+        if (result) {
           const code = result.getText();
           const now = new Date().toLocaleTimeString();
 
-          // Apenas adiciona à fila, sem bloquear o scanner
           this.scannedQueue.push({ code, time: now });
           this.totalScanned++;
         }
-      })
-      .catch(err => console.error(err));
+      });
 
-    // Inicia o processamento assíncrono dos detalhes
-    if (!this.isProcessing) {
-      this.isProcessing = true;
-      this.processScannedCodes();
+      if (!this.isProcessing) {
+        this.isProcessing = true;
+        this.processScannedCodes();
+      }
+    } catch (err) {
+      console.error('Erro ao acessar a câmera:', err);
     }
   }
 
   stopScan() {
     this.isScanning = false;
+
+    // Desativar a câmera
+    if (this.videoStream) {
+      this.videoStream.getTracks().forEach(track => track.stop());
+      this.videoStream = null;
+    }
+
+    // Ocultar o vídeo
+    const videoElement = document.getElementById('videoElement') as HTMLVideoElement;
+    if (videoElement) {
+      videoElement.style.display = 'none';
+      videoElement.srcObject = null; // Limpa a referência para liberar a câmera
+    }
   }
 
   async processScannedCodes() {
     while (this.isScanning || this.scannedQueue.length > 0) {
       if (this.scannedQueue.length > 0) {
-        const item = this.scannedQueue.shift(); // Pega o primeiro item da fila
+        const item = this.scannedQueue.shift();
         if (item) {
           this.detailedCodes.push(item);
-          await this.delay(5000); // Delay antes de processar o próximo
+          await this.delay(5000);
+          this.totalAdded++;
         }
       } else {
-        await this.delay(500); // Pequeno delay para evitar loop excessivo
+        await this.delay(500);
       }
     }
     this.isProcessing = false;

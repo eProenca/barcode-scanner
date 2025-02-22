@@ -2,9 +2,9 @@
     <po-button p-label="Ler Código de Barras" (p-click)="startScan()"></po-button>
     <po-button p-label="Parar" (p-click)="stopScan()" *ngIf="isScanning"></po-button>
   
-    <p><strong>Total de códigos lidos:</strong> {{ totalScanned }}</p>
+    <p><strong>Total de códigos lidos:</strong> {{ totalScanned }} / {{ totalAdded }}.</p>
   
-    <video id="videoElement" width="100%" height="auto" autoplay></video>
+    <video id="videoElement" width="100%" height="auto" autoplay style="display: none;"></video>
   
     <po-list-view *ngIf="scannedQueue.length" [p-items]="scannedQueue" p-title="Códigos na Fila">
       <ng-template let-item p-list-view-detail-template>
