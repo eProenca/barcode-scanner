@@ -6,12 +6,12 @@
   
     <video id="videoElement" width="100%" height="auto" autoplay style="display: none;"></video>
   
-    <po-list-view *ngIf="scannedQueue.length" [p-items]="scannedQueue" p-title="Códigos na Fila">
+    <!-- <po-list-view *ngIf="scannedQueue.length" [p-items]="scannedQueue" p-title="Códigos na Fila">
       <ng-template let-item p-list-view-detail-template>
         <p><strong>Código:</strong> {{ item.code }}</p>
         <p><strong>Hora da Leitura:</strong> {{ item.time }}</p>
       </ng-template>
-    </po-list-view>
+    </po-list-view> -->
   
     <po-list-view *ngIf="detailedCodes.length" [p-items]="detailedCodes" p-title="Detalhes Processados">
       <ng-template let-item p-list-view-detail-template>
