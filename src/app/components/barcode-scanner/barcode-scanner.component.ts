@@ -26,7 +26,7 @@ export class BarcodeScannerComponent {
       .decodeFromVideoDevice(undefined, 'videoElement', (result) => {
         if (result?.getText) {
           const now = Date.now();
-          if (now - this.lastScanned >= 5000) { // Delay de 5 segundos entre leituras
+          if (now - this.lastScanned >= 3000) { // Delay de 3 segundos entre leituras
             const scannedItem = {
               code: result.getText(),
               time: new Date().toLocaleTimeString()
