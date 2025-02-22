@@ -1,0 +1,13 @@
+<po-page-default  p-title="Leitor de Código de Barras">
+    <po-button p-label="Ler Código de Barras" (p-click)="startScan()"></po-button>
+    <po-button p-label="Parar" (p-click)="stopScan()" *ngIf="isScanning"></po-button>
+  
+    <video id="videoElement" width="100%" height="auto" autoplay></video>
+  
+    <po-list-view *ngIf="scannedCodes.length" [p-items]="scannedCodes" p-title="Itens Escaneados">
+      <ng-template let-item p-list-view-detail-template>
+        {{ item }}
+      </ng-template>
+    </po-list-view>
+  </po-page-default>
+  
