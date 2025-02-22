@@ -15,6 +15,7 @@ export class BarcodeScannerComponent {
   scannedCodes: { code: string, time: string }[] = [];
   isScanning: boolean = false;
   lastScanned: number = 0;
+  totalScanned: number = 0; // Contador de códigos lidos
 
   constructor() {
     this.scanner = new BrowserMultiFormatReader();
@@ -26,12 +27,13 @@ export class BarcodeScannerComponent {
       .decodeFromVideoDevice(undefined, 'videoElement', (result) => {
         if (result?.getText) {
           const now = Date.now();
-          if (now - this.lastScanned >= 3000) { // Delay de 3 segundos entre leituras
+          if (now - this.lastScanned >= 5000) {
             const scannedItem = {
               code: result.getText(),
               time: new Date().toLocaleTimeString()
             };
             this.scannedCodes.push(scannedItem);
+            this.totalScanned++; // Incrementa o contador
             this.lastScanned = now;
           }
         }

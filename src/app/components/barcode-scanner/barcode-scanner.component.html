@@ -2,6 +2,8 @@
     <po-button p-label="Ler Código de Barras" (p-click)="startScan()"></po-button>
     <po-button p-label="Parar" (p-click)="stopScan()" *ngIf="isScanning"></po-button>
   
+    <p><strong>Total de códigos lidos:</strong> {{ totalScanned }}</p>
+  
     <video id="videoElement" width="100%" height="auto" autoplay></video>
   
     <po-list-view 
