@@ -26,11 +26,12 @@ export class BarcodeScannerComponent {
       .decodeFromVideoDevice(undefined, 'videoElement', (result) => {
         if (result?.getText) {
           const now = Date.now();
-          if (now - this.lastScanned >= 5000) {
-            this.scannedCodes.push({
+          if (now - this.lastScanned >= 5000) { // Delay de 5 segundos entre leituras
+            const scannedItem = {
               code: result.getText(),
-              time: new Date().toLocaleTimeString() // Captura a hora/minuto/segundo
-            });
+              time: new Date().toLocaleTimeString()
+            };
+            this.scannedCodes.push(scannedItem);
             this.lastScanned = now;
           }
         }
