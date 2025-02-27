@@ -88,6 +88,28 @@ export class BarcodeScannerComponent implements OnDestroy {
     window.addEventListener('keydown', this.keydownListener);
   }
 
+  async startUrovoReader() {
+    this.isScanning = true;
+    let scannedCode = '';
+  
+    document.addEventListener('urovo.scan', (event: any) => {
+      if (!this.isScanning) return;
+  
+      const barcodeData = event.detail?.data || '';
+      if (barcodeData) {
+        const now = new Date().toLocaleTimeString();
+        this.scannedQueue.push({ code: barcodeData, time: now });
+        this.totalScanned++;
+      }
+  
+      if (!this.isProcessing) {
+        this.isProcessing = true;
+        this.processScannedCodes();
+      }
+    });
+  }
+  
+
   stopScan() {
     this.isScanning = false;
 
