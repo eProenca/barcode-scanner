@@ -92,19 +92,29 @@ export class BarcodeScannerComponent implements OnDestroy {
     this.isScanning = true;
     const urovoInput = document.getElementById('urovoInput') as HTMLInputElement;
   
-    urovoInput.value = '';
-    urovoInput.focus();
+    urovoInput.value = ''; // Reseta o campo
+    urovoInput.focus(); // Garante que o scanner insira os dados aqui
   
-    urovoInput.addEventListener('input', () => {
-      const scannedCode = urovoInput.value.trim();
-      if (scannedCode) {
-        const now = new Date().toLocaleTimeString();
-        this.scannedQueue.push({ code: scannedCode, time: now });
-        this.totalScanned++;
-        urovoInput.value = '';
+    urovoInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === 'Tab') {
+        event.preventDefault(); // Evita que mude o foco para outro elemento
+        const scannedCode = urovoInput.value.trim();
+        
+        if (scannedCode) {
+          const now = new Date().toLocaleTimeString();
+          this.scannedQueue.push({ code: scannedCode, time: now });
+          this.totalScanned++;
+          urovoInput.value = ''; // Limpa o campo para o próximo código
+        }
+
+        if (!this.isProcessing) {
+          this.isProcessing = true;
+          this.processScannedCodes();
+        }
       }
     });
   }
+  
   
   stopScan() {
     this.isScanning = false;
