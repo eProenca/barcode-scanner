@@ -1,16 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { BrowserMultiFormatReader } from '@zxing/browser';
 import { CommonModule } from '@angular/common';
-import { PoPageModule, PoButtonModule, PoListViewModule } from '@po-ui/ng-components';
+import { PoPageModule, PoButtonModule, PoListViewModule, PoFieldModule } from '@po-ui/ng-components';
 
 @Component({
   selector: 'app-barcode-scanner',
   standalone: true,
-  imports: [CommonModule, PoPageModule, PoButtonModule, PoListViewModule],
+  imports: [CommonModule, PoPageModule, PoButtonModule, PoListViewModule, PoFieldModule],
   templateUrl: './barcode-scanner.component.html',
   styleUrls: ['./barcode-scanner.component.scss']
 })
-export class BarcodeScannerComponent {
+export class BarcodeScannerComponent implements OnDestroy {
   scanner: BrowserMultiFormatReader;
   scannedQueue: { code: string, time: string }[] = [];
   detailedCodes: { code: string, time: string }[] = [];
@@ -19,6 +19,8 @@ export class BarcodeScannerComponent {
   totalAdded: number = 0;
   isProcessing: boolean = false;
   videoStream: MediaStream | null = null;
+  scannedCode: string = '';
+  keydownListener: any;
 
   constructor() {
     this.scanner = new BrowserMultiFormatReader();
@@ -40,7 +42,6 @@ export class BarcodeScannerComponent {
         if (result) {
           const code = result.getText();
           const now = new Date().toLocaleTimeString();
-
           this.scannedQueue.push({ code, time: now });
           this.totalScanned++;
         }
@@ -55,20 +56,54 @@ export class BarcodeScannerComponent {
     }
   }
 
+  async startReader() {
+    this.isScanning = true;
+    this.scannedCode = '';
+
+    if (this.keydownListener) {
+      window.removeEventListener('keydown', this.keydownListener);
+    }
+
+    this.keydownListener = (event: KeyboardEvent) => {
+      if (!this.isScanning) return;
+
+      if (event.key === 'Enter' || event.key === 'Tab') {
+        event.preventDefault();
+        if (this.scannedCode) {
+          const now = new Date().toLocaleTimeString();
+          this.scannedQueue.push({ code: this.scannedCode, time: now });
+          this.totalScanned++;
+          this.scannedCode = ''; // Limpa o buffer
+        }
+      } else {
+        this.scannedCode += event.key;
+      }
+
+      if (!this.isProcessing) {
+        this.isProcessing = true;
+        this.processScannedCodes();
+      }
+    };
+
+    window.addEventListener('keydown', this.keydownListener);
+  }
+
   stopScan() {
     this.isScanning = false;
 
-    // Desativar a câmera
     if (this.videoStream) {
       this.videoStream.getTracks().forEach(track => track.stop());
       this.videoStream = null;
     }
 
-    // Ocultar o vídeo
     const videoElement = document.getElementById('videoElement') as HTMLVideoElement;
     if (videoElement) {
       videoElement.style.display = 'none';
-      videoElement.srcObject = null; // Limpa a referência para liberar a câmera
+      videoElement.srcObject = null;
+    }
+
+    if (this.keydownListener) {
+      window.removeEventListener('keydown', this.keydownListener);
     }
   }
 
@@ -90,5 +125,9 @@ export class BarcodeScannerComponent {
 
   delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  ngOnDestroy() {
+    this.stopScan();
   }
 }
