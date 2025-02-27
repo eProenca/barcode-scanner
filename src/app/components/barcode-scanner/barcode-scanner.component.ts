@@ -73,7 +73,7 @@ export class BarcodeScannerComponent implements OnDestroy {
           const now = new Date().toLocaleTimeString();
           this.scannedQueue.push({ code: this.scannedCode, time: now });
           this.totalScanned++;
-          this.scannedCode = ''; // Limpa o buffer
+          this.scannedCode = '';
         }
       } else {
         this.scannedCode += event.key;
@@ -88,28 +88,24 @@ export class BarcodeScannerComponent implements OnDestroy {
     window.addEventListener('keydown', this.keydownListener);
   }
 
-  async startUrovoReader() {
+  startUrovoReader() {
     this.isScanning = true;
-    let scannedCode = '';
+    const urovoInput = document.getElementById('urovoInput') as HTMLInputElement;
   
-    document.addEventListener('urovo.scan', (event: any) => {
-      if (!this.isScanning) return;
+    urovoInput.value = '';
+    urovoInput.focus();
   
-      const barcodeData = event.detail?.data || '';
-      if (barcodeData) {
+    urovoInput.addEventListener('input', () => {
+      const scannedCode = urovoInput.value.trim();
+      if (scannedCode) {
         const now = new Date().toLocaleTimeString();
-        this.scannedQueue.push({ code: barcodeData, time: now });
+        this.scannedQueue.push({ code: scannedCode, time: now });
         this.totalScanned++;
-      }
-  
-      if (!this.isProcessing) {
-        this.isProcessing = true;
-        this.processScannedCodes();
+        urovoInput.value = '';
       }
     });
   }
   
-
   stopScan() {
     this.isScanning = false;
 
@@ -136,7 +132,7 @@ export class BarcodeScannerComponent implements OnDestroy {
         if (item) {
           this.detailedCodes.push(item);
           this.totalAdded++;
-          await this.delay(5000);
+          await this.delay(3000);
         }
       } else {
         await this.delay(500);
