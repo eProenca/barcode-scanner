@@ -94,6 +94,7 @@ export class BarcodeScannerComponent implements OnDestroy {
     this.isScanning = true;
     const urovoInput = document.getElementById('urovoInput') as HTMLInputElement;
   
+    urovoInput.disabled = false;
     urovoInput.value = '';
     urovoInput.focus();
   
@@ -117,6 +118,10 @@ export class BarcodeScannerComponent implements OnDestroy {
         }
       }
     });
+
+    setTimeout(() => {
+      urovoInput.disabled = true;
+    }, 1000);
   }
   
   playBeep() {
