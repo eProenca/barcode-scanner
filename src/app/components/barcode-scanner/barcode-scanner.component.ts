@@ -90,7 +90,7 @@ export class BarcodeScannerComponent implements OnDestroy {
     window.addEventListener('keydown', this.keydownListener);
   }
 
-  startUrovoReader2() {
+  startUrovoReader() {
     this.isScanning = true;
     const urovoInput = document.getElementById('urovoInput') as HTMLInputElement;
   
@@ -119,37 +119,6 @@ export class BarcodeScannerComponent implements OnDestroy {
       }
     });
   }
-
-  startUrovoReader() {
-    this.isScanning = true;
-    const urovoInput = document.getElementById('urovoInput') as HTMLInputElement;
-  
-    urovoInput.readOnly = true; // Impede o teclado de abrir
-    urovoInput.focus();
-    urovoInput.readOnly = false; // Reativa o campo para capturar o scanner
-  
-    urovoInput.addEventListener('input', () => {
-      setTimeout(() => {
-        const scannedCode = urovoInput.value.trim();
-  
-        if (scannedCode) {
-          this.scannedQueue.push({ code: scannedCode, time: new Date().toLocaleTimeString() });
-          this.totalScanned++;
-          urovoInput.value = '';
-  
-          this.playBeep();
-        }
-  
-        if (!this.isProcessing) {
-          this.isProcessing = true;
-          this.processScannedCodes();
-        }
-  
-        urovoInput.blur(); // Fecha o teclado
-      }, 50);
-    });
-  }
-  
   
   playBeep() {
     const audio = new Audio('sounds/beep2.mp3');
