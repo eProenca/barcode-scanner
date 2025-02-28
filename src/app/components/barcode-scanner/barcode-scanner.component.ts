@@ -121,16 +121,19 @@ export class BarcodeScannerComponent implements OnDestroy {
 
   startUrovoReader() {
     this.isScanning = true;
+    const urovoInput = document.getElementById('urovoInput') as HTMLInputElement;
   
-    window.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter' || event.key === 'Tab') {
-        event.preventDefault();
-        const scannedCode = event.target instanceof HTMLInputElement ? event.target.value.trim() : '';
+    urovoInput.value = '';
+    urovoInput.focus();
   
+    urovoInput.addEventListener('input', () => {
+      setTimeout(() => {
+        const scannedCode = urovoInput.value.trim();
         if (scannedCode) {
           const now = new Date().toLocaleTimeString();
           this.scannedQueue.push({ code: scannedCode, time: now });
           this.totalScanned++;
+          urovoInput.value = '';
   
           this.playBeep();
         }
@@ -139,9 +142,10 @@ export class BarcodeScannerComponent implements OnDestroy {
           this.isProcessing = true;
           this.processScannedCodes();
         }
-      }
+      }, 500); // Pequeno delay para capturar a leitura completa
     });
   }
+  
   
   
   playBeep() {
