@@ -95,7 +95,6 @@ export class BarcodeScannerComponent implements OnDestroy {
     const urovoInput = document.getElementById('urovoInput') as HTMLInputElement;
   
     urovoInput.value = '';
-    urovoInput.readOnly = true; 
     urovoInput.focus();
   
     urovoInput.addEventListener('keydown', (event) => {
