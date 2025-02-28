@@ -95,7 +95,8 @@ export class BarcodeScannerComponent implements OnDestroy {
     const urovoInput = document.getElementById('urovoInput') as HTMLInputElement;
   
     urovoInput.value = '';
-    urovoInput.focus();
+    // urovoInput.focus();
+    setTimeout(() => urovoInput.blur(), 100); 
   
     urovoInput.addEventListener('keydown', (event) => {
       if (event.key === 'Enter' || event.key === 'Tab') {
@@ -124,7 +125,6 @@ export class BarcodeScannerComponent implements OnDestroy {
     audio.play().catch(error => console.error('Erro ao reproduzir o som:', error));
   }
   
-
   stopScan() {
     this.isScanning = false;
 
