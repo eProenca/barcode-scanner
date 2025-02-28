@@ -2,7 +2,7 @@
   <po-button p-label="Câmera" p-icon="an an-camera" (p-click)="startScan()"></po-button>
   <po-button p-label="Leitor" p-icon="an an-barcode" (p-click)="startReader()"></po-button>
   <po-button p-label="Leitor Urovo" p-icon="an an-scan" (p-click)="startUrovoReader()"></po-button>
-  <input id="urovoInput" type="text" style="position: absolute; left: -9999px;" />
+  <input id="urovoInput" contenteditable="true" type="text" style="position: absolute; left: -9999px;" />
   <po-button p-label="Parar" (p-click)="stopScan()" *ngIf="isScanning"></po-button>
 
   <p><strong>Total de códigos lidos:</strong> {{ totalScanned }} / {{ totalAdded }}.</p>
