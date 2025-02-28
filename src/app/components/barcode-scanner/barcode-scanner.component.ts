@@ -120,9 +120,10 @@ export class BarcodeScannerComponent implements OnDestroy {
   }
   
   playBeep() {
-    const beep = new Audio('/src/assets/sounds/scanner-beep.mp3');
-    beep.play();
+    const audio = new Audio('sounds/beep2.mp3');
+    audio.play().catch(error => console.error('Erro ao reproduzir o som:', error));
   }
+  
 
   stopScan() {
     this.isScanning = false;
