@@ -122,20 +122,20 @@ export class BarcodeScannerComponent implements OnDestroy {
 
   startUrovoReader() {
     this.isScanning = true;
-    const urovoDiv = document.getElementById('urovoInput') as HTMLDivElement;
+    const urovoInput = document.getElementById('urovoInput') as HTMLInputElement;
   
-    urovoDiv.innerText = ''; // Limpa qualquer texto anterior
-    urovoDiv.focus(); // Mantém o foco no elemento
+    urovoInput.readOnly = true; // Impede o teclado de abrir
+    urovoInput.focus();
+    urovoInput.readOnly = false; // Reativa o campo para capturar o scanner
   
-    urovoDiv.addEventListener('input', () => {
+    urovoInput.addEventListener('input', () => {
       setTimeout(() => {
-        const scannedCode = urovoDiv.innerText.trim(); // Captura o código escaneado
+        const scannedCode = urovoInput.value.trim();
   
         if (scannedCode) {
-          const now = new Date().toLocaleTimeString();
-          this.scannedQueue.push({ code: scannedCode, time: now });
+          this.scannedQueue.push({ code: scannedCode, time: new Date().toLocaleTimeString() });
           this.totalScanned++;
-          urovoDiv.innerText = ''; // Limpa para a próxima leitura
+          urovoInput.value = '';
   
           this.playBeep();
         }
@@ -144,7 +144,9 @@ export class BarcodeScannerComponent implements OnDestroy {
           this.isProcessing = true;
           this.processScannedCodes();
         }
-      }, 50); // Pequeno delay para garantir que o scanner termine a inserção
+  
+        urovoInput.blur(); // Fecha o teclado
+      }, 50);
     });
   }
   
