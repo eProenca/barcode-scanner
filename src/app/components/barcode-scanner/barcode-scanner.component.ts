@@ -44,6 +44,8 @@ export class BarcodeScannerComponent implements OnDestroy {
           const now = new Date().toLocaleTimeString();
           this.scannedQueue.push({ code, time: now });
           this.totalScanned++;
+
+          this.playBeep();
         }
       });
 
@@ -92,19 +94,21 @@ export class BarcodeScannerComponent implements OnDestroy {
     this.isScanning = true;
     const urovoInput = document.getElementById('urovoInput') as HTMLInputElement;
   
-    urovoInput.value = ''; // Reseta o campo
-    urovoInput.focus(); // Garante que o scanner insira os dados aqui
+    urovoInput.value = '';
+    urovoInput.focus();
   
     urovoInput.addEventListener('keydown', (event) => {
       if (event.key === 'Enter' || event.key === 'Tab') {
-        event.preventDefault(); // Evita que mude o foco para outro elemento
+        event.preventDefault();
         const scannedCode = urovoInput.value.trim();
         
         if (scannedCode) {
           const now = new Date().toLocaleTimeString();
           this.scannedQueue.push({ code: scannedCode, time: now });
           this.totalScanned++;
-          urovoInput.value = ''; // Limpa o campo para o próximo código
+          urovoInput.value = '';
+
+          this.playBeep();
         }
 
         if (!this.isProcessing) {
@@ -115,7 +119,11 @@ export class BarcodeScannerComponent implements OnDestroy {
     });
   }
   
-  
+  playBeep() {
+    const beep = new Audio('/src/assets/sounds/scanner-beep.mp3');
+    beep.play();
+  }
+
   stopScan() {
     this.isScanning = false;
 
