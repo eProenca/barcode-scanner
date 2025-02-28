@@ -90,11 +90,12 @@ export class BarcodeScannerComponent implements OnDestroy {
     window.addEventListener('keydown', this.keydownListener);
   }
 
-  startUrovoReader2() {
+  startUrovoReader() {
     this.isScanning = true;
     const urovoInput = document.getElementById('urovoInput') as HTMLInputElement;
   
     urovoInput.value = '';
+    urovoInput.readOnly = true; 
     urovoInput.focus();
   
     urovoInput.addEventListener('keydown', (event) => {
@@ -116,39 +117,6 @@ export class BarcodeScannerComponent implements OnDestroy {
           this.processScannedCodes();
         }
       }
-    });
-  }
-
-  startUrovoReader() {
-    this.isScanning = true;
-    const urovoInput = document.getElementById('urovoInput') as HTMLInputElement;
-  
-    urovoInput.value = '';
-    urovoInput.focus();
-  
-    urovoInput.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter' || event.key === 'Tab') {
-        event.preventDefault(); // Bloqueia o Tab/Enter
-      }
-    });
-  
-    urovoInput.addEventListener('input', () => {
-      setTimeout(() => {
-        const scannedCode = urovoInput.value.trim();
-        if (scannedCode) {
-          const now = new Date().toLocaleTimeString();
-          this.scannedQueue.push({ code: scannedCode, time: now });
-          this.totalScanned++;
-          urovoInput.value = '';
-  
-          this.playBeep();
-        }
-  
-        if (!this.isProcessing) {
-          this.isProcessing = true;
-          this.processScannedCodes();
-        }
-      }, 100); // Delay curto para evitar perda de caracteres
     });
   }
   
