@@ -1,13 +1,21 @@
 <po-page-default p-title="Leitor de Código de Barras">
   <po-button p-label="Câmera" p-icon="an an-camera" (p-click)="startScan()"></po-button>
+  <po-button p-label="Câmera2" p-icon="an an-camera" (p-click)="initQuagga()"></po-button>
   <po-button p-label="Leitor" p-icon="an an-barcode" (p-click)="startReader()"></po-button>
   <po-button p-label="Leitor Urovo" p-icon="an an-scan" (p-click)="startUrovoReader()"></po-button>
   <input id="urovoInput" type="text" style="position: absolute; left: -9999px;" />
   <po-button p-label="Parar" (p-click)="stopScan()" *ngIf="isScanning"></po-button>
 
   <p><strong>Total de códigos lidos:</strong> {{ totalScanned }} / {{ totalAdded }}.</p>
-
   <video id="videoElement" width="100%" height="auto" autoplay style="display: none;"></video>
+
+    <!-- Cam -->
+    <po-container *ngIf="isScanning">
+      <div id="scanner-container" style="width: 100%; height: 250px; border: 1px solid #ccc;">
+        <p>Ativando câmera...</p>
+      </div>
+    </po-container>
+    <!-- Cam -->
 
   <po-list-view *ngIf="detailedCodes.length" [p-items]="detailedCodes" p-title="Detalhes Processados">
     <ng-template let-item p-list-view-detail-template>

@@ -1,12 +1,13 @@
 import { Component, OnDestroy } from '@angular/core';
 import { BrowserMultiFormatReader } from '@zxing/browser';
 import { CommonModule } from '@angular/common';
-import { PoPageModule, PoButtonModule, PoListViewModule, PoFieldModule } from '@po-ui/ng-components';
+import { PoPageModule, PoButtonModule, PoListViewModule, PoFieldModule, PoModule } from '@po-ui/ng-components';
+import Quagga from '@ericblade/quagga2';
 
 @Component({
   selector: 'app-barcode-scanner',
   standalone: true,
-  imports: [CommonModule, PoPageModule, PoButtonModule, PoListViewModule, PoFieldModule],
+  imports: [CommonModule, PoPageModule, PoButtonModule, PoListViewModule, PoFieldModule, PoModule],
   templateUrl: './barcode-scanner.component.html',
   styleUrls: ['./barcode-scanner.component.scss']
 })
@@ -165,5 +166,66 @@ export class BarcodeScannerComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.stopScan();
+    this.stopQuagga();
+  }
+
+  initQuagga() {
+    Quagga.init({
+      inputStream: {
+        name: "Live",
+        type: "LiveStream",
+        target: document.querySelector('#scanner-container') || undefined
+      },
+      decoder: {
+        readers: ["code_128_reader"] // Tipos de código de barras suportados
+      },
+      locate: true, // ✅ Habilita a localização do código com borda vermelha
+      locator: {
+        halfSample: true,
+        patchSize: "x-large", // Pode ser 'x-small', 'small', 'medium', 'large', 'x-large'      
+      },
+    }, (err) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      Quagga.start();
+    });
+  
+    Quagga.onDetected((data) => {
+      console.log("Código detectado:", data.codeResult.code);
+    });
+
+    Quagga.onProcessed((result) => {
+      const drawingCanvas = document.querySelector(".drawingBuffer") as HTMLCanvasElement;
+      if (!drawingCanvas || !result) return;
+    
+      const ctx = drawingCanvas.getContext("2d");
+      if (!ctx) return;
+    
+      ctx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height); // Limpa o canvas antes de desenhar
+    
+      if (result.boxes) {
+        console.log("Detectando bordas...", result.boxes);
+    
+        ctx.strokeStyle = "red"; // Cor da borda
+        ctx.lineWidth = 2;
+        result.boxes.forEach((box) => {
+          ctx.beginPath();
+          ctx.moveTo(box[0][0], box[0][1]); // Ponto 1
+          ctx.lineTo(box[1][0], box[1][1]); // Ponto 2
+          ctx.lineTo(box[2][0], box[2][1]); // Ponto 3
+          ctx.lineTo(box[3][0], box[3][1]); // Ponto 4    
+          ctx.closePath();
+          ctx.stroke();
+        });
+      }
+    });
+    
+  }
+  
+  stopQuagga() {
+    Quagga.stop();
+    Quagga.offDetected(); // Remove o evento para evitar duplicação
   }
 }
