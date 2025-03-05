@@ -170,6 +170,7 @@ export class BarcodeScannerComponent implements OnDestroy {
   }
 
   initQuagga() {
+    this.isScanning = true;
     Quagga.init({
       inputStream: {
         name: "Live",
