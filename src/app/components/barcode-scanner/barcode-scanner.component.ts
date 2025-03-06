@@ -40,7 +40,7 @@ export class BarcodeScannerComponent implements OnDestroy {
         timestamp: new Date().toLocaleString()
       };
   
-      // this.scannedCodes = [...this.scannedCodes, scannedItem]; // Criando nova referência para detecção de mudança
+      this.scannedCodes = [...this.scannedCodes, scannedItem]; // Criando nova referência para detecção de mudança
       this.playBeep();
   
       setTimeout(() => {}, 5000);
