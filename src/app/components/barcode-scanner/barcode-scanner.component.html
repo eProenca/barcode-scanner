@@ -6,6 +6,9 @@
     (scanSuccess)="onCodeResult($event)">
   </zxing-scanner>
 
+  <po-info *ngIf="scannedCodes.length > 0" p-label="Último Código Escaneado" [p-value]="scannedCodes[scannedCodes.length - 1].code"></po-info>
+
+
   <po-list-view [p-items]="scannedCodes" p-title="Códigos Escaneados">
     <ng-template let-item p-list-view-item-content>
       <p><strong>Código:</strong> {{ item.code }}</p>
@@ -13,6 +16,7 @@
       <p><strong>Escaneado em:</strong> {{ item.timestamp }}</p>
     </ng-template>
   </po-list-view>
+  
 
 </po-page-default>
 

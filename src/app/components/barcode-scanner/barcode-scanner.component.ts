@@ -12,6 +12,7 @@ import { BarcodeFormat } from '@zxing/library';
   templateUrl: './barcode-scanner.component.html',
   styleUrls: ['./barcode-scanner.component.scss']
 })
+
 export class BarcodeScannerComponent implements OnDestroy {
   scannedQueue: { code: string, time: string }[] = [];
   detailedCodes: { code: string, time: string }[] = [];
@@ -34,17 +35,18 @@ export class BarcodeScannerComponent implements OnDestroy {
   onCodeResult(result: string) {
     if (result) {
       const scannedItem = {
-        code: result, // Código escaneado
-        format: 'Desconhecido', // Nome do formato
-        timestamp: new Date().toLocaleString() // Data e hora do escaneamento
+        code: result,
+        format: 'Desconhecido',
+        timestamp: new Date().toLocaleString()
       };
-
-      this.scannedCodes.push(scannedItem); // Adiciona o novo item à lista
+  
+      this.scannedCodes = [...this.scannedCodes, scannedItem]; // Criando nova referência para detecção de mudança
       this.playBeep();
-      setTimeout(() => {}, 5000); // Delay de 5 segundos antes da próxima leitura
+  
+      setTimeout(() => {}, 5000);
     }
   }
-
+  
 
   playBeep() {
     const audio = new Audio('assets/sounds/beep2.mp3');
