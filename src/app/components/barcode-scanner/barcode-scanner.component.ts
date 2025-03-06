@@ -20,7 +20,7 @@ export class BarcodeScannerComponent implements OnDestroy {
   totalAdded: number = 0;
   isProcessing: boolean = false;
   scannedCode: string = '';
-  scannedCodes: string[] = [];
+  scannedCodes: { code: string; format: string; timestamp: string }[] = [];
   formatsEnabled: BarcodeFormat[] = [BarcodeFormat.QR_CODE, BarcodeFormat.CODE_128, BarcodeFormat.EAN_13];
 
   startScan() {
@@ -33,17 +33,18 @@ export class BarcodeScannerComponent implements OnDestroy {
 
   onCodeResult(result: string) {
     if (result) {
-      const now = new Date().toLocaleTimeString();
-      this.scannedCodes.push(result);
-      this.totalScanned++;
-      this.playBeep();
+      const scannedItem = {
+        code: result, // Código escaneado
+        format: 'Desconhecido', // Nome do formato
+        timestamp: new Date().toLocaleString() // Data e hora do escaneamento
+      };
 
-      if (!this.isProcessing) {
-        this.isProcessing = true;
-        this.processScannedCodes();
-      }
+      this.scannedCodes.push(scannedItem); // Adiciona o novo item à lista
+      this.playBeep();
+      setTimeout(() => {}, 5000); // Delay de 5 segundos antes da próxima leitura
     }
   }
+
 
   playBeep() {
     const audio = new Audio('assets/sounds/beep2.mp3');
