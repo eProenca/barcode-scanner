@@ -23,6 +23,7 @@
     "@po-ui/ng-templates": "^18.24.0",
     "@po-ui/style": "^19.4.0",
     "@zxing/browser": "^0.1.5",
+    "@zxing/ngx-scanner": "^19.0.0",
     "ngx-barcode-scanner": "^14.0.1",
     "quagga": "^0.12.1",
     "rxjs": "~7.8.0",
