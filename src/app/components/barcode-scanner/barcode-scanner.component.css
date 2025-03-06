@@ -2,3 +2,61 @@ po-button {
     margin: 0 5px;
 }
 
+.scanner-container {
+    position: relative;
+    transition: background-color 0.3s ease-in-out;
+    align-items: center;
+    text-align: center;
+}
+
+.scanner-overlay {
+    position: absolute;
+    top: 7px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.2);
+    color: white;
+    padding: 1px 5px;
+    border-radius: 5px;
+    font-size: 10px;
+}
+
+.scanner-border {
+    position: absolute;
+    top: 3px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 90px;
+    width: 490px;
+    border-radius: 8px;
+    border: 3px solid transparent; /* Começa sem borda */
+}
+
+.border-red {
+    border-color: rgba(255, 0, 0, 0.3); /* Vermelho */
+}
+
+.border-green {
+    border-color: rgba(0, 255, 0, 0.3); /* Verde */
+}
+
+
+/* .scanner-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.custom-scanner {
+    width: 500px !important;
+    height: 100px !important;
+} */
+
+::ng-deep video {
+    min-height: 100px;
+    max-height: 100px;
+    max-width: 500px;
+    object-fit: contain;
+    border-radius: 8px;
+}

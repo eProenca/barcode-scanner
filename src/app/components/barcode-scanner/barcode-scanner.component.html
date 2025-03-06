@@ -2,9 +2,16 @@
   <po-button *ngIf="!isScanning" p-label="Iniciar Scanner" (click)="startScan()"></po-button>
   <po-button *ngIf="isScanning" p-label="Parar Scanner" (click)="stopScan()"></po-button>
 
-  <zxing-scanner *ngIf="isScanning" [formats]="formatsEnabled" [autostart]="true"
+  <div class="scanner-container">
+    <zxing-scanner *ngIf="isScanning" [formats]="formatsEnabled" [autostart]="true"
     (scanSuccess)="onCodeResult($event)">
   </zxing-scanner>
+
+    <div class="scanner-overlay" *ngIf="!scannedEffect">
+    <p>Posicione o código dentro da câmera...</p>
+  </div>
+  <div class="scanner-border" *ngIf="isScanning" [ngClass]="{ 'border-green': scannedEffect, 'border-red': !scannedEffect }"></div>
+</div>
 
   <po-info *ngIf="scannedCodes.length > 0" p-label="Último Código Escaneado" [p-value]="scannedCodes[scannedCodes.length - 1].code"></po-info>
 
