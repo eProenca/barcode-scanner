@@ -3,7 +3,7 @@
   <po-button *ngIf="isScanning" p-label="Parar Scanner" (click)="stopScan()"></po-button>
 
   <div class="scanner-container">
-    <zxing-scanner *ngIf="isScanning" [formats]="formatsEnabled" [autostart]="true"
+    <zxing-scanner *ngIf="isScanning" [formats]="formatsEnabled" [autostart]="true" [tryHarder]="true"
     (scanSuccess)="onCodeResult($event)">
   </zxing-scanner>
 
