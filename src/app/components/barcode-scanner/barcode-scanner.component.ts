@@ -22,7 +22,7 @@ export class BarcodeScannerComponent implements OnDestroy {
   isProcessing: boolean = false;
   scannedCode: string = '';
   scannedCodes: { code: string; format: string; timestamp: string }[] = [];
-  formatsEnabled: BarcodeFormat[] = [BarcodeFormat.QR_CODE, BarcodeFormat.CODE_128, BarcodeFormat.EAN_13];
+  formatsEnabled: BarcodeFormat[] = [BarcodeFormat.CODE_128, BarcodeFormat.EAN_13];
   scannedEffect: boolean = false;
 
   startScan() {
@@ -49,7 +49,12 @@ export class BarcodeScannerComponent implements OnDestroy {
   }  
 
   onCodeResult(result: string) {
-    if (result) {
+    if (!result) return;
+      
+    let isValidEAN13 = /^\d{13}$/.test(result); // Valida se tem exatamente 13 números
+    let isValidCODE128 = /^[\x20-\x7E]+$/.test(result);
+
+    if (isValidEAN13 || isValidCODE128) {
       this.scannedEffect = true;
       setTimeout(() => this.scannedEffect = false, 300); // Remove o efeito após 300ms
   
