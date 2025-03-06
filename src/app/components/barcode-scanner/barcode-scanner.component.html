@@ -10,11 +10,14 @@
 
 
   <po-list-view [p-items]="scannedCodes" p-title="Códigos Escaneados">
-    <ng-template let-item p-list-view-item-content>
-      <p><strong>Código:</strong> {{ item.code }}</p>
-      <p><strong>Formato:</strong> {{ item.format }}</p>
-      <p><strong>Escaneado em:</strong> {{ item.timestamp }}</p>
-    </ng-template>
+    <ng-template p-list-view-content-template let-item>
+      <po-info class="po-md-12" p-label="Pack item" [p-value]="item.code"></po-info>
+      <div class="po-row">
+        <p><strong>Código:</strong> {{ item.code }}</p>
+        <p><strong>Formato:</strong> {{ item.format }}</p>
+        <p><strong>Escaneado em:</strong> {{ item.timestamp }}</p>
+      </div>
+      </ng-template>
   </po-list-view>
   
 
